@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+  <head>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.22.1/full/pyodide.js"></script>
+  </head>
+
+  <body>
+    <p>
+      Choose a number between 0 and 2047 and the binary representation will be shown below.
+    </p>
+    <input type="number" id="num_input" value="42" min="0" max="2047" step="1" onchange="evaluatePython()"/>
+    <div>Binary:</div>
+    <textarea id="output" style="width: 100%;" rows="2" disabled></textarea>
+
+    <script>
+      const output = document.getElementById("output");
+      const input_num = document.getElementById("num_input");
+	  const squares = [1024, 512, 256, 128, 64, 32, 16, 8, 4, 2, 1];
+	  
+	  const python_script = `num = int(input_num)
+final = []
+next_num = num
+for i in options:
+    if i > next_num:
+        final.append('0')
+    else:
+        final.append('1')
+        next_num = next_num % i
+''.join(final)`;
+
+      function addToOutput(s) {
+        output.value = s;
+      }
+
+      output.value = "";
+      // init Pyodide
+      async function main() {
+        let pyodide = await loadPyodide();
+        return pyodide;
+      }
+      let pyodideReadyPromise = main();
+
+      async function evaluatePython() {
+        let pyodide = await pyodideReadyPromise;
+		pyodide.globals.set("input_num", input_num.value);
+		pyodide.globals.set("options", squares);
+        try {
+          let result = pyodide.runPython(python_script);
+          output.value = result;
+        } catch (err) {
+          output.value = err;
+        }
+      }
+    </script>
+  </body>
+</html>
