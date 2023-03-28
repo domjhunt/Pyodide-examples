@@ -2,6 +2,14 @@
 <html>
   <head>
     <script src="https://cdn.jsdelivr.net/pyodide/v0.22.1/full/pyodide.js"></script>
+    <script>
+      var python_text
+      const python_file_script = "https://domjhunt.github.io/Pyodide-examples/binary_script.py"
+      fetch(python_file_script)
+          .then(function(response) { response.text()
+                                              .then(function(text) {python_text = text;});
+                                   });
+    </script>
   </head>
 
   <body>
@@ -15,18 +23,6 @@
     <script>
       const output = document.getElementById("output");
       const input_num = document.getElementById("num_input");
-	  const squares = [1024, 512, 256, 128, 64, 32, 16, 8, 4, 2, 1];
-	  
-	  const python_script = `num = int(input_num)
-final = []
-next_num = num
-for i in options:
-    if i > next_num:
-        final.append('0')
-    else:
-        final.append('1')
-        next_num = next_num % i
-''.join(final)`;
 
       function addToOutput(s) {
         output.value = s;
@@ -42,17 +38,17 @@ for i in options:
 
       async function evaluatePython() {
         let pyodide = await pyodideReadyPromise;
-		pyodide.globals.set("input_num", input_num.value);
-		pyodide.globals.set("options", squares);
+	pyodide.globals.set("input_num", input_num.value);
         try {
-          let result = pyodide.runPython(python_script);
+          let result = pyodide.runPython(python_text);
           output.value = result;
         } catch (err) {
           output.value = err;
         }
       }
-	    
+	  
       evaluatePython()
+	  
     </script>
   </body>
 </html>
