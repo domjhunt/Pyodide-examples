@@ -12,6 +12,4 @@ def binary_string(input_number):
             next_num = next_num % i
     return ''.join(final)
 
-
-if __name__ == "__main__":
-    binary_string(input_num)
+binary_string(input_num)
