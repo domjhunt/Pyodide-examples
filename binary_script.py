@@ -15,4 +15,3 @@ def binary_string(input_number):
 
 if __name__ == "__main__":
     binary_string(input_num)
-    
